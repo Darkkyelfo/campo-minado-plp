@@ -5,7 +5,7 @@ require_once "telaCampo.php";
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-//Comentario novo
+//Modifiquei esse comentario ^^
 class IA{
     var $nome = "IA";
     var $telaCampo;
