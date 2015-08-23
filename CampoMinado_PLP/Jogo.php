@@ -12,6 +12,7 @@ class Jogo {
     var $numeroDeBombas;
     var $bombasAchadas = 0;
     var $modoDeJogo =2;//1 - jogador sozinho, 2 - jogador contra IA, 3 - só a IA
+    var $tamanho = null;
     
     public function __construct($nomeJogador,$linha, $coluna, $IA, $porcentoMinas) {
         $this->porcentoMinas = $porcentoMinas;
@@ -20,6 +21,7 @@ class Jogo {
         $this->numeroBandeiras = $this->numeroDeBombas;
         $this->campo = new Campo($linha, $coluna,  $this->numeroDeBombas);
         $this->nomeJogador=$nomeJogador;
+        $this->tamanho=$linha;
     }
     
     function getExplosao(){
