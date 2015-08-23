@@ -71,9 +71,10 @@ class TelaEscolha extends GtkWindow {
             $tempo = null;
         }
         //Acaba aqui o trecho referente aos botões de radio para o tempo.
-        
+        $modoDeJogo=2;//Sinaliza que o jogador vai jogar contra a IA
         if($this->escolhaXML->get_widget('r_semIA')->get_active()){
             $ia=null;
+            $modoDeJogo=1;//sinaliza que o jogador vai jogar sozinho
         }
         else if($this->escolhaXML->get_widget("r_IA")->get_active()){
             $ia=new IA();
@@ -87,11 +88,25 @@ class TelaEscolha extends GtkWindow {
             $ia=new IA();
             $ia->nivel=3;
         }
+        //Caso escolha para a IA jogar sozinha
+        else if ($this->escolhaXML->get_widget("r_IA_ALONE")->get_active()){
+            $ia=new IA();
+            $ia->nivel=3;
+            $modoDeJogo = 3;//sinaliza que a IA vai jogar só
+        }
             //fecha a janela
             $this->escolhaXML->get_widget('window1')->destroy();
+            //Trecho responsavel por criar o jogo apartir das caracteristicas
+            //definidas acima
             $jogo=new Jogo($nomeJogador,$tamanho,$tamanho,$ia,$porc);
+            $jogo->modoDeJogo=$modoDeJogo;//seta o modo de jogo
+            if ($jogo->modoDeJogo==3){
+                $jogo->turno=false;//Sinaliza como false o turno para indicar que a IA deve começar
+                //a jogar
+            }
             $gladeCampo = new TelaCampo($gladeCampo,$jogo,$tempo);
             $gladeCampo->iniciarGUI();
+
     }
     
     public function sair(){

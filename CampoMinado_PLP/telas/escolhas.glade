@@ -360,6 +360,22 @@
                     <property name="position">4</property>
                   </packing>
                 </child>
+                <child>
+                  <widget class="GtkRadioButton" id="r_IA_ALONE">
+                    <property name="label" translatable="yes">IA SOZINHA</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="active">True</property>
+                    <property name="draw_indicator">True</property>
+                    <property name="group">r_semIA</property>
+                  </widget>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">5</property>
+                  </packing>
+                </child>
               </widget>
               <packing>
                 <property name="expand">True</property>
