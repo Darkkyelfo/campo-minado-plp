@@ -342,7 +342,7 @@ class IA{
             $this->cont=0;
             $this->telaCampo->ativarClick=true;//Ativa o click novamente
             $this->telaCampo->matrizBotao[$this->linhaEscolhida][$this->colunaEscolhida]->clicked();//IA click
-            $this->telaCampo->jogo->turno=true;//Troca para o turno do usuário
+            $this->telaCampo->jogo->trocarTurno();//Troca para o turno do usuário, caso seja nescessário
         }
         
         return $continuar;
