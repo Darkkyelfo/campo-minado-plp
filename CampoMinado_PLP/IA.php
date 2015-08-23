@@ -68,6 +68,11 @@ class IA{
                 if ($this->telaCampo->jogo->campo->verificarIndice($l, $c)) {
                     if ($this->telaCampo->matrizBotao[$l][$c]->get_active() == false && $this->matrizIA[$l][$c] != "L") {
                         $this->matrizIA[$l][$c] = -1; //o elemento é uma bomba
+                        $buttonImg= $this->telaCampo->matrizBotao[$l][$c]->get_image();//pega a imagem do botão
+                        if($this->telaCampo->jogo->modoDeJogo==3 && $this->telaCampo->ehBandeira($buttonImg)==false){//Caso a IA estaja jogando só, Exiba as casas que tem bomba
+                            //Troca a imagem das casas onde a IA acha que tem bombas
+                            $this->telaCampo->alterarImgBotao($buttonImg,$l,$c); 
+                        }
                     }
                 }
             }
@@ -119,6 +124,12 @@ class IA{
                 if ($this->telaCampo->jogo->campo->verificarIndice($l, $c)) {
                     if ($this->telaCampo->matrizBotao[$l][$c]->get_active()== false && $this->matrizIA[$l][$c] != -1 && $this->matrizIA[$l][$c] != "L") {
                         $this->matrizIA[$l][$c] = "L"; //o elemento não é bomba.
+                        $buttonImg= $this->telaCampo->matrizBotao[$l][$c]->get_image();
+                        if($this->telaCampo->jogo->modoDeJogo==3 && $this->telaCampo->ehBandeira($buttonImg)){//Caso a IA estaja jogando só, Exiba as casas que tem bomba
+                            //Troca a imagem das casas onde a IA acha que tem bombas
+                            $this->telaCampo->alterarImgBotao($buttonImg,$l,$c);
+                        
+                        }
                     }
                 }
             }
@@ -230,7 +241,6 @@ class IA{
         //Ele buscará novos valores de indice
         $this->AtualizarMatrizIA();
         $this->padraoSimples();
-        $this->imprimirMatriz();
         while ($bool){
             //Caso o botão esteja clicaco ele realizará o loop navamente até achar
             //um botão que não esteja clicado
@@ -330,7 +340,11 @@ class IA{
     }
     
     public function iniciarAtraso(){
-        Gtk::timeout_add(1000,array($this,"atrasarJogada"));
+        $atraso = 1000;//Armazena o "Delay" da jogada
+        if($this->telaCampo->jogo->modoDeJogo==3){
+            $atraso = 500;//quando a IA jogar só suas jogadas são mais rápidas
+        }
+        Gtk::timeout_add($atraso,array($this,"atrasarJogada"));
     }
     //Atrasa a jogada da IA em 1 segundo para que o usuário possa ver onde ela clicou
     public function atrasarJogada(){
