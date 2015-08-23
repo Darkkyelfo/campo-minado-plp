@@ -38,9 +38,18 @@ class TelaCampo extends GtkWindow {
         $this->conectarCampo();
         //começa a contar o tempo
         $this->tempo->iniciar($this,$this->tempoMax);
+        if($this->jogo->modoDeJogo==3){
+             $this->jogadaAutomatica();
+         }
         Gtk::main();
     }
-
+    
+    //Resposavel por permitir que a IA jogue sozinha
+    //Realiza a chamada do método que inicializa a jogada da IA
+    //Realiza esse chamada a cada 0,35 segundos
+    public function jogadaAutomatica(){
+        Gtk::timeout_add(1500,array($this->jogo,"chamarJogadaIA"));
+    }
 
     public function vencer(){
         $this->jogo->getVitoria();//reproduz o som de vitoria
