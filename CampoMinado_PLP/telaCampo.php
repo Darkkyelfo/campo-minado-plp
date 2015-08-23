@@ -56,6 +56,9 @@ class TelaCampo extends GtkWindow {
         $telaAlerta = new TelaAlerta($this);
         $telaAlerta->setLabel("Parabéns você venceu!!!");
         $this->controle++;
+        if($this->jogo->modoDeJogo==3){
+            $this->jogo->turno=true;
+        }
         //Desativa a tela
         $this->campoXML->get_widget('window1')->set_sensitive(false);
         $this->tempo->pararContagem();
@@ -67,7 +70,7 @@ class TelaCampo extends GtkWindow {
         $this->jogo->getExplosao();
         new TelaAlerta($this);
         $this->controle++;
-        $this->jogo->turno=false;//impede a ia de jogar quando a partida acaba
+        $this->jogo->trocarTurnoObg();//impede a ia de jogar quando a partida acaba
         //Desativa a tela
         $this->campoXML->get_widget('window1')->set_sensitive(false);
         $this->tempo->pararContagem();
@@ -132,6 +135,12 @@ class TelaCampo extends GtkWindow {
            $buttonImg= $this->matrizBotao[$linha][$coluna]->get_image();
            //se o botão direito do mouse for clicado
            if($event->button == 3){
+               $this->alterarImgBotao($buttonImg,$linha,$coluna);
+           }
+
+    }
+    //Troca a imagem do botão. 
+    public function alterarImgBotao($buttonImg,$linha,$coluna){
                /*
                 * Se a imagem do botão for igual a null(não tem imagem) ou 
                 * o nome da imagem for fundo troque pela bandeira
@@ -161,8 +170,6 @@ class TelaCampo extends GtkWindow {
                     //Exibe a quantidade de bandeiras disponiveis para uso.
                     $this->campoXML->get_widget("labelBandeira")->set_label($this->jogo->numeroBandeiras);
                }
-           }
-
     }
     //Responsavel por incrementar o número de bombas achadas
     private function desarmarBomba($linha,$coluna){
@@ -176,7 +183,7 @@ class TelaCampo extends GtkWindow {
     }
 
     //Detecta se na casa clicada tem bandeira.
-    private function ehBandeira($buttonImg){
+    public function ehBandeira($buttonImg){
         if($buttonImg != null && $buttonImg->get_name()=="bandeira"){
             return true;
         }
@@ -189,6 +196,23 @@ class TelaCampo extends GtkWindow {
      * Chama as telas de vitória e derrota.
      * 
      */ 
+    // Esse método é responsavel por definir qual tela deve
+    //ser exibida ao termino se clicar em uma bomba
+    // Tela de vitoria ou derrota dependendo do tipo de partida e da vez
+    //de quem está jogando.
+    private function JanelaAposBomba(){
+        if ($this->jogo->modoDeJogo!=3) {//Se estiver jogando só ou contra a IA
+            if (!($this->jogo->turno)) {
+                $this->vencer();
+                    } 
+            else {
+                $this->perder();
+                    }
+    }
+        else{
+            $this->perder();
+        }
+    }
     public function onClickButton($linha, $coluna, $matrizBotao, $jogo) {
         if ($this->ativarClick) {//Desativa a tela para o usuário não click junto com a IA
             $buttonImg = $this->matrizBotao[$linha][$coluna]->get_image();
@@ -219,11 +243,7 @@ class TelaCampo extends GtkWindow {
                 //Coloca a imagem na casa onde tem bomba.
                 $matrizBotao[$linha][$coluna]->set_image($img);
                 if ($this->controle == 0) {
-                    if (!($this->jogo->turno)) {
-                        $this->vencer();
-                    } else {
-                        $this->perder();
-                    }
+                    $this->JanelaAposBomba();
                 }
             } else if ($campo->matriz[$linha][$coluna] == 0) {//Caso clique em uma casa com 0
                 $matrizBotao[$linha][$coluna]->set_label("");
