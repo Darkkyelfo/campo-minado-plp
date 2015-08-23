@@ -84,25 +84,15 @@ class TelaCampo extends GtkWindow {
 
 
     public function reiniciarGUI(){
-        $this->tempo->pararContagem();
-        $this->tempo = new Time();
-        $this->controle=0;
-        $armazenarJogo = $this->jogo;
-        $this->jogo = new Jogo($armazenarJogo->nomeJogador,$armazenarJogo->campo->linha, $armazenarJogo->campo->coluna, $armazenarJogo->IA,$armazenarJogo->porcentoMinas);
-        $this->campoXML->get_widget('window1')->destroy();//destroi a tela
-        //cria um novo campo
-        $this->campoXML = new GladeXML($this->gladeCampo);
-        $this->campoXML->get_widget('window1')->connect_simple('destroy', array('Gtk','main_quit'));
-        $this->campoXML->get_widget('b_reniciar')->connect_simple('clicked', array($this,'reiniciarGUI'));
-        $this->campoXML->get_widget('b_sair')->connect_simple('clicked', array($this,'sair'));
-        $this->campoXML->get_widget("labelBandeira")->set_label($this->jogo->numeroBandeiras);
-        //coloca o nome do jogador no text box
-        $textoNome = $this->campoXML->get_widget('label_jogador');
-        $textoNome->set_text($this->jogo->nomeJogador);
-        $this->iniciarGUI();//conecta os botãoes na nova GUI
-        $this->campoXML->get_widget('window1')->show_all();//Mostra a GUI;
-        $this->jogo->IA->receberCampo($this);
-        $this->tempo->iniciar($this, $this->tempoMax);
+        $jogoAnt = $this->jogo; 
+        $novoJogo = new Jogo($jogoAnt->nomeJogador,$jogoAnt->tamanho,$jogoAnt->tamanho,$jogoAnt->IA,$jogoAnt->porcentoMinas);
+        $novoJogo->modoDeJogo = $jogoAnt->modoDeJogo;
+        if ($novoJogo->modoDeJogo==3){
+            $novoJogo->turno=false;
+        }
+        $novaTela = new telaCampo($this->gladeCampo,$novoJogo,$this->tempoMax);
+        $this->campoXML->get_widget('window1')->destroy();
+        $novaTela->iniciarGUI();
     }
     //Criar uma matriz de botões e conecta todos os eventos e segnal aos botões
     public function conectarCampo(){
