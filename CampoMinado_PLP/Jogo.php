@@ -34,7 +34,6 @@ class Jogo {
     //Esse método é responsavel por ativar a jogada da IA
     function chamarJogadaIA(){
         if($this->turno==false){
-            print("entrei");
             if($this->IA->nivel==1){
                 $this->IA->clickNivel1();
                 }
@@ -46,6 +45,19 @@ class Jogo {
                 }
             }
         return true;
+    }
+    
+    //Troca o turno da partidade inpendente 
+    //do tipo de jogo
+    //É utilizado pelo método "perder()"
+    //presente em telaCampo.
+    function trocarTurnoObg(){
+        if ($this->turno){
+            $this->turno=false;
+            }
+        else{
+            $this->turno=true;
+            }      
     }
     function trocarTurno(){
         //Só realiza a troca se existir uma IA.
